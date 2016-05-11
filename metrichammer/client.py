@@ -152,7 +152,7 @@ class Client(Process):
                 if self.socket is None:
                     self.log.debug("GraphiteHandler: Reconnect failed.")
                 else:
-                    self.log.debug("GraphiteHandler: sending data.")
+                    self.log.debug("GraphiteHandler: sending data. %s"%(self.metrics))
                     # Send data to socket
                     self._send_data(''.join(self.metrics))
                     self.metrics = []
