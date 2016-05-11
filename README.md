@@ -1,5 +1,5 @@
 # MetricHammer
-A carbon line protocol test suite that can be used to simulate load for thousands of diamond clients.  
+A carbon line protocol test suite that can be used to simulate load masquerading as  a diamond client.
 
 ## Requirements
 Requires Python 3+
