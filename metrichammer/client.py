@@ -87,7 +87,7 @@ class Client(Process):
             random.seed()
             value = round(random.random(),2)
             
-            metricline = ("%s.%s.%s %s %s\n"%(config['server']['namespace'],host,metric,value,str(int(time.time()))))
+            metricline = ("%s.%s.%s %s %s\n"%(self.config['server']['namespace'],host,metric,value,str(int(time.time()))))
             
             self.metriccount += 1
             self.process(metricline)
