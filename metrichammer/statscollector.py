@@ -48,7 +48,7 @@ class statscollector(Process):
             self.metrics.append(self.q.get())
             
         # Process the metrics if there are any
-        if size(self.metrics) > 0:
+        if len(self.metrics) > 0:
             print(self.metrics)
         
             
