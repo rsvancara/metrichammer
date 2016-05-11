@@ -57,6 +57,8 @@ class Client(Process):
         # error logging throttling
         self.server_error_interval = float(120)
         self._errors = {}
+        
+        self.statsqueue = []
 
         # We do this weird process title swap around to get the sync manager
         # title correct for ps
@@ -96,8 +98,8 @@ class Client(Process):
         
         totaltime = endtime - starttime
         
-        self.q.put({'metric':'totalmetrics','value':self.metriccount})
-        self.q.put({'metric':'totaltime','value':totaltime})
+        self.statscollector({'metric':'totalmetrics','value':self.metriccount})
+        self.statscollector({'metric':'totaltime','value':totaltime})
 
     def process(self, metric):
         """
@@ -114,9 +116,20 @@ class Client(Process):
             endtime = time.time()
             totaltime = endtime - starttime
             
-            self.q.put({'metric':'sendtime','value':totaltime})
+            self.statscollector({'metric':'sendtime','value':totaltime})
             
-
+    def statscollector(self,log):
+        
+        self.statsqueue.append(log)
+        
+        if len(self.statsqueue) > 1000:
+            self.flushstats()
+         
+    def flushstats(self):
+        
+        self.q.put(self.statsqueue)
+        self.statsqueue = []
+        
     def flush(self):
         """Flush metrics in queue"""
         self._send()
