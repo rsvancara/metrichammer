@@ -100,6 +100,9 @@ class Client(Process):
         
         self.statscollector({'metric':'totalmetrics','value':self.metriccount})
         self.statscollector({'metric':'totaltime','value':totaltime})
+        
+        self.flushstats()
+        
 
     def process(self, metric):
         """
