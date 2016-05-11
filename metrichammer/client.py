@@ -8,6 +8,7 @@ import time
 import random
 import traceback
 import socket
+import configobj
 
 
 try:
@@ -86,7 +87,7 @@ class Client(Process):
             random.seed()
             value = round(random.random(),2)
             
-            metricline = ("servers.test.pages.%s.%s %s %s\n"%(host,metric,value,str(int(time.time()))))
+            metricline = ("%s.%s.%s %s %s\n"%(config['server']['namespace'],host,metric,value,str(int(time.time()))))
             
             self.metriccount += 1
             self.process(metricline)
@@ -125,12 +126,11 @@ class Client(Process):
         Try to send all data in buffer.
         """
         try:
-            self.socket.sendall(data)
+            self.socket.sendall(data.encode('utf-8'))
             self._reset_errors()
-        except:
+        except Exception as e:
             self._close()
-            self._throttle_error("GraphiteHandler: Socket error, "
-                                 "trying reconnect.")
+            self._throttle_error("GraphiteHandler: Socket error trying reconnect. %s"%str(e))
             self._connect()
             try:
                 self.socket.sendall(data)
@@ -214,14 +214,14 @@ class Client(Process):
             self._close()
             return
         # Enable keepalives?
-        if self.proto != 'udp' and self.keepalive:
-            self.log.error("GraphiteHandler: Setting socket keepalives...")
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE,
-                                   self.keepaliveinterval)
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL,
-                                   self.keepaliveinterval)
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 3)
+        #if self.proto != 'udp' and self.keepalive:
+        #    self.log.error("GraphiteHandler: Setting socket keepalives...")
+        #    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+        #    self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE,
+        #                           self.keepaliveinterval)
+        #    self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL,
+        #                           self.keepaliveinterval)
+        #    self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 3)
         # Set socket timeout
         self.socket.settimeout(self.timeout)
         # Connect to graphite server
@@ -289,4 +289,28 @@ class Client(Process):
         Destroy instance of the GraphiteHandler class
         """
         self._close()
-            
+       
+       
+ 
+if __name__ == '__main__':
+
+    config = config = configobj.ConfigObj('../metrichammer.conf')
+
+    # Initialize Logging
+    log = logging.getLogger('metrichammer')
+
+    log.setLevel(logging.DEBUG)
+    # Configure Logging Format
+    formatter = logging.Formatter('[%(asctime)s] [%(threadName)s] %(message)s')
+    # handler
+    streamHandler = logging.StreamHandler(sys.stdout)
+    streamHandler.setFormatter(formatter)
+    streamHandler.setLevel(logging.DEBUG)
+    log.addHandler(streamHandler)
+    q = Queue()
+    
+    c = Client(config,0,q)
+    c.run()
+    
+    
+    print("Test complete")
