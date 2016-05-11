@@ -42,6 +42,7 @@ class statscollector(Process):
                     self.log.debug("Statistics collection thread terminating due to empty statistics queue, no work to do..bye")
                     break
                 sleepcount += 1
+                time.sleep(2)
                 continue
             
             sleepcount = 0
