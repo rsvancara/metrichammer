@@ -45,7 +45,7 @@ class statscollector(Process):
                 continue
             
             sleepcount = 0
-            self.metrics.append(q.get())
+            self.metrics.append(self.q.get())
             
         # Process the metrics if there are any
         if size(self.metrics) > 0:
