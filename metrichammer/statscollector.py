@@ -59,21 +59,21 @@ class statscollector(Process):
                     metricvalue = k['value']
                    
                     if metricname not in bucket:
-                        bucket['metricname'] = []
+                        bucket[metricname] = []
                     
-                    self.log.debug("%s,%s"%(metricname,metricvalue))
-                    
-                    bucket['metricname'].append(metricvalue)
+                    #self.log.debug("%s,%s"%(metricname,metricvalue))
+                    varray = bucket[metricname] 
+		    varray.append(metricvalue)
+
+                    bucket[metricname] = varray
+
                     
             self.metrics = []
-            
-            
-            print(bucket)
             
             # Now generate files for analysis
             self.log.debug("creating bucket data files for post run analyis")
             for key, value in bucket.iteritems():
-                self.log.debug("Creating data file %s"%())
+                self.log.debug("Creating data file %s"%(key))
                 with open(key + ".data","w") as f:
                     for i in value:
                         f.write(str(i).encode('utf-8'))
