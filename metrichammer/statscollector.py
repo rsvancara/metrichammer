@@ -66,7 +66,7 @@ class statscollector(Process):
             self.metrics = []
             
             # Now generate files for analysis
-            for key, value in bucket.items:
+            for key, value in bucket.iteritems():
                 
                 with open(key+".data","w") as f:
                     for i in value:
