@@ -106,12 +106,10 @@ class Client(Process):
         
             totaltime = endtime - starttime
         
-            self.statscollector({'metric':'totalmetrics','value':self.metriccount})
-            self.statscollector({'metric':'totaltime','value':totaltime})
-        
+            self.statscollector({'metric':'totalmetrics','value':self.metriccount,'time':time.time()})
+            self.statscollector({'metric':'totaltime','value':totaltime,'time':time.time()})
+            # Never ever forget to flush!! 
             self.flushstats()
-        
-        
 
     def process(self, metric):
         """
@@ -128,17 +126,21 @@ class Client(Process):
             endtime = time.time()
             totaltime = endtime - starttime
             
-            self.statscollector({'metric':'sendtime','value':totaltime})
+            self.statscollector({'metric':'sendtime','value':totaltime,'time':time.time()})
             
     def statscollector(self,log):
-        
+        """
+        Stats collection buffer
+        """     
         self.statsqueue.append(log)
         
         if len(self.statsqueue) > 1000:
             self.flushstats()
          
     def flushstats(self):
-        
+        """ 
+        Flush the statistics
+        """ 
         self.q.put(self.statsqueue)
         self.statsqueue = []
         
