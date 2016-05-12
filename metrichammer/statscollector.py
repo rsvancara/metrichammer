@@ -50,7 +50,8 @@ class statscollector(Process):
             
         # Process the metrics if there are any
         if len(self.metrics) > 0:
-            print(self.metrics)
-        
+            #print(self.metrics)
+            pass:
+                
             
         

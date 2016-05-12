@@ -80,6 +80,8 @@ class Client(Process):
         
         starttime = time.time()
 
+        try:
+            
         for i in range(0,self.runs):
             
             random.seed()
@@ -93,15 +95,22 @@ class Client(Process):
             
             self.metriccount += 1
             self.process(metricline)
+        
+        except KeyboardInterrupt:
+            self.log.error("Keyboard interrupt for thread: %s"%(self.threadid))
             
-        endtime = time.time()
+        finally:
+            self.log.debug("Exiting thread %s"%(self.threadid))
+            
+            endtime = time.time()
         
-        totaltime = endtime - starttime
+            totaltime = endtime - starttime
         
-        self.statscollector({'metric':'totalmetrics','value':self.metriccount})
-        self.statscollector({'metric':'totaltime','value':totaltime})
+            self.statscollector({'metric':'totalmetrics','value':self.metriccount})
+            self.statscollector({'metric':'totaltime','value':totaltime})
         
-        self.flushstats()
+            self.flushstats()
+        
         
 
     def process(self, metric):

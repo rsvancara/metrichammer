@@ -12,6 +12,7 @@ import optparse
 import signal
 import logging.config
 from multiprocessing import Queue
+from multiprocessing import Manager
 
 
 try:
@@ -63,6 +64,8 @@ def main():
     try:
         log.debug("Initializing Server")
         
+        manager = Manager()
+        
         clients = []
         
         q = Queue()
@@ -92,14 +95,19 @@ def main():
         # Wait for the statistics collector to finish
         sc.join()
 
+    except KeyboardInterrupt:
+        print("Cleaning up thread")
         
     except Exception as e:
         import traceback
         log.error("Unhandled exception: %s" % str(e))
         log.error("traceback: %s" % traceback.format_exc())
-        sys.exit(1)    
+        sys.exit(1)
         
-
+    finally:
+        print("Cleaning up thread")
+        
+        
 if __name__ == '__main__':
     if setproctitle:
         setproctitle('metrichammer')
