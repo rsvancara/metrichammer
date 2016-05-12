@@ -70,7 +70,7 @@ class statscollector(Process):
             # Now generate files for analysis
             self.log.debug("creating bucket data files for post run analyis")
             for key, value in bucket.iteritems():
-                
+                self.log.debug("Creating data file %s"%(key))
                 with open(key + ".data","w") as f:
                     for i in value:
                         f.write(str(i).encode('utf-8'))
