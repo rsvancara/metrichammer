@@ -158,7 +158,7 @@ class Client(Process):
             self._throttle_error("GraphiteHandler: Socket error trying reconnect. %s"%str(e))
             self._connect()
             try:
-                self.socket.sendall(data)
+                self.socket.sendall(data.encode('utf-8'))
             except:
                 return
             self._reset_errors()
