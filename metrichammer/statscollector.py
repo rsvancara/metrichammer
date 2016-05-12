@@ -31,9 +31,7 @@ class statscollector(Process):
         
         sleepcount = 0
         while True:
-            
-            
-            
+
             # Test to see if the queue is empty, should be pretty full most of the time
             if self.q.empty() == True:
                 
@@ -47,11 +45,43 @@ class statscollector(Process):
             
             sleepcount = 0
             self.metrics.append(self.q.get())
-            
+         
+         
+        bucket = {}    
         # Process the metrics if there are any
+        # Should be a list of lists of dictionaries, that we need to parse through
+        # then we sort them into buckets
         if len(self.metrics) > 0:
+            
+            for ilist in self.metrics:
+                for k in ilist:
+                    metricname = k['metric']
+                    metricvalue = k['value']
+                   
+                    if metricname not in bucket:
+                        bucket['metricname'] = []
+                    
+                    bucket['metricname'].append(metricvalue)
+                    
+            self.metrics = []
+            
+            # Now generate files for analysis
+            for key, value in bucket.items:
+                
+                with open(key+".data","w") as f:
+                    for i in value:
+                        f.write(i)
+                        f.write("\n")
+                    f.close()
+                    
+            
+                
+            
+        
+            
+            
             #print(self.metrics)
-            pass:
+            pass
                 
             
         
