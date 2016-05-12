@@ -82,19 +82,19 @@ class Client(Process):
 
         try:
             
-        for i in range(0,self.runs):
-            
-            random.seed()
-            metric = ("metric_%d"%(random.randint(0,self.maxmetrics)))
-            host = ("host_%d"%(self.threadid))
-            
-            random.seed()
-            value = round(random.random(),2)
-            
-            metricline = ("%s.%s.%s %s %s\n"%(self.config['server']['namespace'],host,metric,value,str(int(time.time()))))
-            
-            self.metriccount += 1
-            self.process(metricline)
+            for i in range(0,self.runs):
+                
+                random.seed()
+                metric = ("metric_%d"%(random.randint(0,self.maxmetrics)))
+                host = ("host_%d"%(self.threadid))
+                
+                random.seed()
+                value = round(random.random(),2)
+                
+                metricline = ("%s.%s.%s %s %s\n"%(self.config['server']['namespace'],host,metric,value,str(int(time.time()))))
+                
+                self.metriccount += 1
+                self.process(metricline)
         
         except KeyboardInterrupt:
             self.log.error("Keyboard interrupt for thread: %s"%(self.threadid))
