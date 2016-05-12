@@ -61,7 +61,7 @@ class statscollector(Process):
                     if metricname not in bucket:
                         bucket['metricname'] = []
                     
-                    print("%s,%s"%(metricname,metricvalue))
+                    self.log.debug("%s,%s"%(metricname,metricvalue))
                     
                     bucket['metricname'].append(metricvalue)
                     
