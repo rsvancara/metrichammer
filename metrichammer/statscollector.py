@@ -70,7 +70,7 @@ class statscollector(Process):
                 
                 with open(key+".data","w") as f:
                     for i in value:
-                        f.write(i.encode('utf-8'))
+                        f.write(str(i).encode('utf-8'))
                         f.write("\n")
                     f.close()
                     
