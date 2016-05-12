@@ -52,7 +52,7 @@ class statscollector(Process):
         # Should be a list of lists of dictionaries, that we need to parse through
         # then we sort them into buckets
         if len(self.metrics) > 0:
-            
+            self.log.debug("Placing metrics into buckets")
             for ilist in self.metrics:
                 for k in ilist:
                     metricname = k['metric']
@@ -66,9 +66,10 @@ class statscollector(Process):
             self.metrics = []
             
             # Now generate files for analysis
+            self.log.debug("creating bucket data files for post run analyis")
             for key, value in bucket.iteritems():
                 
-                with open(key+".data","w") as f:
+                with open(key + ".data","w") as f:
                     for i in value:
                         f.write(str(i).encode('utf-8'))
                         f.write("\n")
