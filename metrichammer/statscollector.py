@@ -57,17 +57,17 @@ class statscollector(Process):
                 for k in ilist:
                     metricname = k['metric']
                     metricvalue = k['value']
+                    metrictime = k['time']
                    
                     if metricname not in bucket:
                         bucket[metricname] = []
                     
                     #self.log.debug("%s,%s"%(metricname,metricvalue))
                     varray = bucket[metricname] 
-		    varray.append(metricvalue)
+                    varray.append(str(metrictime) + " " + str(metricvalue))
 
                     bucket[metricname] = varray
 
-                    
             self.metrics = []
             
             # Now generate files for analysis
@@ -76,7 +76,7 @@ class statscollector(Process):
                 self.log.debug("Creating data file %s"%(key))
                 with open(key + ".data","w") as f:
                     for i in value:
-                        f.write(str(i).encode('utf-8'))
+                        f.write(i.encode('utf-8')
                         f.write("\n")
                     f.close()
                     
