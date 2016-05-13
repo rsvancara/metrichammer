@@ -76,7 +76,7 @@ class statscollector(Process):
                 self.log.debug("Creating data file %s"%(key))
                 with open(key + ".data","w") as f:
                     for i in value:
-                        f.write(i.encode('utf-8')
+                        f.write(i.encode('utf-8'))
                         f.write("\n")
                     f.close()
                     
